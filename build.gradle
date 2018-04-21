@@ -24,8 +24,8 @@ buildscript {
 apply plugin: 'org.jetbrains.dokka'
 
 sourceSets {
-    main.kotlin.srcDirs += 'src/org/primal/kotlin'
-    main.java.srcDirs += 'src/org/primal/java'
+    main.kotlin.srcDirs += 'src/main/kotlin'
+    main.java.srcDirs += 'src/main/java'
 }
 
 repositories {
@@ -34,15 +34,15 @@ repositories {
 }
 
 dependencies {
-	compile "org.jetbrains.kotlin:kotlin-stdlib"
-	compile 'org.jetbrains.dokka:dokka-gradle-plugin:0.9.16'
-	compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5"
+    compile "org.jetbrains.kotlin:kotlin-stdlib"
+    compile 'org.jetbrains.dokka:dokka-gradle-plugin:0.9.16'
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5"
 
 }
 
 
 dokka {
-    outputFormat = 'html' 
+    outputFormat = 'html'
     outputDirectory = "$buildDir/javadoc"
 }
 
@@ -60,5 +60,5 @@ jar {
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion="4.6"
+    gradleVersion = "4.6"
 }
