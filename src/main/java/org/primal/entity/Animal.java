@@ -5,6 +5,9 @@ import javafx.scene.shape.Circle;
 import org.primal.behaviour.Behaviour;
 import org.primal.map.Map;
 
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
+
 import java.util.LinkedList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -21,6 +24,11 @@ public abstract class Animal extends LivingEntity {
         this.stamina = stamina;
         this.fullness = fullness;
         this.shape = new Circle(x * 5, y * 5, 2, Color.GREEN);
+        this.shape.setOnMousePressed(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent click) {
+                System.out.printf("Type: Animal %n Fullness: " + getFullness() + "%n Stamina: " + getStamina() + "%n");
+            }
+        });
     }
 
     public Animal(float x, float y) {
@@ -58,4 +66,12 @@ public abstract class Animal extends LivingEntity {
     }
 
     public abstract void eat(LivingEntity food);
+
+    public float getFullness() {
+        return this.fullness;
+    }
+
+    public float getStamina() {
+        return this.stamina;
+    }
 }
