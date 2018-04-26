@@ -1,27 +1,28 @@
 package org.primal;
 
+import org.primal.entity.LivingEntity;
+import org.primal.map.Chunk;
+import org.primal.map.Map;
+import org.primal.tile.Tile;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
-
-import org.primal.entity.LivingEntity;
-import org.primal.map.*;
-import org.primal.tile.Tile;
 
 class Surface extends JPanel {
     private Map map;
-    public Surface(Map map){
+
+    public Surface(Map map) {
         super();
 
         this.map = map;
     }
+
     private void doDrawing(Graphics g) {
         super.paintComponent(g);
-        System.out.println("Doing a doDrawing");
         Graphics2D g2d = (Graphics2D) g;
 
         for (Chunk[] chunks : map.getChunks()) {
-            for(Chunk chunk : chunks){
+            for (Chunk chunk : chunks) {
                 for (int x = 0; x < chunk.getSize(); x++) {
                     for (int y = 0; y < chunk.getSize(); y++) {
                         Tile tile = chunk.getTile(x, y);
@@ -38,14 +39,8 @@ class Surface extends JPanel {
                 }
             }
         }
-
-
-
-
         g2d.drawString("Java 2D", 50, 50);
-
         repaint();
-
     }
 
 
@@ -59,13 +54,10 @@ class Surface extends JPanel {
 public class GUI extends JFrame {
 
     public GUI(Map map) {
-
         initUI(map);
     }
 
     private void initUI(Map map) {
-
-
         add(new Surface(map));
 
         setTitle("Simple Java 2D example");
@@ -73,6 +65,4 @@ public class GUI extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-
-
 }
