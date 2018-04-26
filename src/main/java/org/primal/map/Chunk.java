@@ -15,10 +15,9 @@ public class Chunk extends SimObject {
     private int id;
     private Map map;
 
-    public Chunk(float x, float y, int id, Map map) {
+    public Chunk(float x, float y, Map map) {
         super(x, y);
         this.map = map;
-        this.id = id;
         tiles = new Tile[size][size];
 
         for (int i = 0; i < size; i++) {
