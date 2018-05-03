@@ -1,7 +1,10 @@
 package org.primal.map;
 
 import org.primal.SimObject;
-import org.primal.entity.*;
+import org.primal.entity.Giraffe;
+import org.primal.entity.Hyena;
+import org.primal.entity.Lion;
+import org.primal.entity.LivingEntity;
 import org.primal.tile.LandTile;
 import org.primal.tile.Tile;
 
@@ -11,30 +14,28 @@ public class Chunk extends SimObject {
     private Tile[][] tiles;
     private int size = 16;
     private int id;
-    private Map map;
 
     public Chunk(float x, float y, Map map) {
-        super(x, y);
-        this.map = map;
+        super(x, y, map);
         tiles = new Tile[size][size];
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-
-                float xPos = i + getPosition()[0] * this.size;
-                float yPos = j + getPosition()[1] * this.size;
-                LivingEntity entity = null;
+                float xPos = i + getX() * this.size;
+                float yPos = j + getY() * this.size;
+                Tile tile = new LandTile(xPos, yPos, map);
+                LivingEntity animal = null;
 
                 int n = ThreadLocalRandom.current().nextInt(0, 3);
                 if (n == 0) {
-                    entity = new Lion(xPos, yPos, 100.0f, 100.0f, map, map.entityId.incrementAndGet());
+                    animal = new Lion(xPos, yPos, map, 100.0f, 100.0f);
                 } else if (n == 1) {
-                    entity = new Hyena(xPos, yPos, 100.0f, 100.0f, map, map.entityId.incrementAndGet());
+                    animal = new Hyena(xPos, yPos, map, 100.0f, 100.0f);
                 } else if (n == 2) {
-                    entity = new Giraffe(xPos, yPos, 100.0f, 100.0f, map, map.entityId.incrementAndGet());
+                    animal = new Giraffe(xPos, yPos, map, 100.0f, 100.0f);
                 }
-                Tile tile = new LandTile(xPos, yPos);
-                tile.addLivingEntity(((Animal) entity).getId(), entity);
+
+                if (animal != null) tile.addLivingEntity(animal);
                 tiles[i][j] = tile;
             }
         }
@@ -48,11 +49,12 @@ public class Chunk extends SimObject {
         }
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                for (LivingEntity entity : getTile(i, j).getLivingEntities().values()) {
-                    entity.simulate(map);
+                for (LivingEntity entity : getTile(i, j).getLivingEntities()) {
+                    entity.simulate();
                 }
             }
         }
+
         //System.out.println("moved to"+ getTile(0,0).getLivingEntities().get(0).getPosition()[0]);
     }
 

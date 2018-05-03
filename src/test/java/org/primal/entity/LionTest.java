@@ -9,6 +9,7 @@ import java.lang.System;
 import org.primal.map.Map;
 import org.primal.tile.Tile;
 import org.primal.entity.Lion;
+import java.awt.geom.Point2D;
 
 
 class LionTest {
@@ -17,7 +18,7 @@ class LionTest {
     @BeforeEach
     private void spawnLion() {
         map = new Map(4); 
-        lion = new Lion(0, 0, 100.0f, 100.0f, map, 1);
+        lion = new Lion(0, 0, map,100.0f, 100.0f);
     }
 
     @Test
@@ -66,10 +67,9 @@ class LionTest {
     @Test
     public void move() {
         for(int i = 0; i<1000; i++){
-            float [] pos = lion.getPosition();
-            Tile oldTile = map.getTile(pos[0], pos[1]);
+            Tile oldTile = map.getTile(lion.getX(), lion.getY());
             lion.move1Unit();
-            Tile newTile = map.getTile(pos[0], pos[1]);
+            Tile newTile = map.getTile(lion.getX(), lion.getY());
             if(newTile.getLivingEntities().size() != 1){
                 //TODO add assert
                 printError();

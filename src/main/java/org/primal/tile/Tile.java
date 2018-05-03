@@ -2,23 +2,25 @@ package org.primal.tile;
 
 import org.primal.SimObject;
 import org.primal.entity.LivingEntity;
+import org.primal.map.Map;
 
 import java.awt.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 public class Tile extends SimObject {
     protected static int size = 30;
-    private ConcurrentHashMap<Integer,LivingEntity> livingEntities;
+    private ConcurrentLinkedQueue<LivingEntity> livingEntities;
 
-    public Tile(float x, float y) {
-        super(x, y);
-        this.livingEntities = new ConcurrentHashMap<Integer,LivingEntity>();
+    public Tile(float x, float y, Map map) {
+        super(x, y, map);
+        this.livingEntities = new ConcurrentLinkedQueue<LivingEntity>();
         this.shape = new Rectangle((int) x * size, (int) y * size, size, size);
     }
 
-    public Tile(float x, float y, ConcurrentHashMap<Integer,LivingEntity> livingEntities) {
-        super(x, y);
+    public Tile(float x, float y, Map map, ConcurrentLinkedQueue<LivingEntity> livingEntities) {
+        super(x, y, map);
         this.livingEntities = livingEntities;
     }
 
@@ -26,8 +28,8 @@ public class Tile extends SimObject {
         return size;
     }
 
-    public void addLivingEntity(int K, LivingEntity ent) {
-        this.livingEntities.put(K, ent);
+    public void addLivingEntity(LivingEntity ent) {
+        this.livingEntities.add(ent);
     }
 
     public void removeLivingEntity(LivingEntity ent) {
@@ -36,7 +38,7 @@ public class Tile extends SimObject {
         }
     }
 
-    public ConcurrentHashMap<Integer,LivingEntity> getLivingEntities() {
+    public ConcurrentLinkedQueue<LivingEntity> getLivingEntities() {
         return livingEntities;
     }
 
