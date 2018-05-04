@@ -3,7 +3,9 @@ package org.primal;
 import org.primal.entity.LivingEntity;
 import org.primal.map.Chunk;
 import org.primal.map.Map;
+import org.primal.tile.LandTile;
 import org.primal.tile.Tile;
+import org.primal.tile.WaterTile;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -34,7 +36,11 @@ class Surface extends JPanel implements MouseListener {
                 for (int x = 0; x < chunk.getSize(); x++) {
                     for (int y = 0; y < chunk.getSize(); y++) {
                         Tile tile = chunk.getTile(x, y);
-                        g2d.setPaint(new Color(181, 202, 51));
+                        if (tile instanceof WaterTile) {
+                            g2d.setPaint(new Color(0, 125, 202));
+                        } else {
+                            g2d.setPaint(new Color(181, 202, 51));
+                        }
                         g2d.fill(tile.getShape());
                         g2d.setPaint(new Color(0, 0, 0));
                         g2d.draw(tile.getShape());

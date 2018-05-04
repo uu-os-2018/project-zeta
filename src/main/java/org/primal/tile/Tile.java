@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class Tile extends SimObject {
     protected static int size = 30;
     private ConcurrentLinkedQueue<LivingEntity> livingEntities;
+    private boolean changeToWaterTile = false;
 
     public Tile(float x, float y, Map map) {
         super(x, y, map);
@@ -26,6 +27,14 @@ public class Tile extends SimObject {
 
     public static int getSize() {
         return size;
+    }
+
+    public boolean isChangeToWaterTile() {
+        return changeToWaterTile;
+    }
+
+    public void changeToWaterTile() {
+        changeToWaterTile = true;
     }
 
     public void addLivingEntity(LivingEntity ent) {
