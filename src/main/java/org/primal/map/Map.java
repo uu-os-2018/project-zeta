@@ -111,12 +111,12 @@ public class Map {
                 tiles = chunk.getTiles();
                 for (int i = 0; i < chunkSize; i++) {
                     for (int j = 0; j < chunkSize; j++) {
-
-                        float xPos = i + chunk.getX() * chunkSize;
-                        float yPos = j + chunk.getY() * chunkSize;
-
-                        animal = new Lion(xPos, yPos, this, 100.0f, 100.0f);
-                        tiles[i][j].addLivingEntity(animal);
+                        if (tiles[i][j] instanceof LandTile) {
+                            float xPos = i + chunk.getX() * chunkSize;
+                            float yPos = j + chunk.getY() * chunkSize;
+                            animal = new Lion(xPos, yPos, this, 100.0f, 100.0f);
+                            tiles[i][j].addLivingEntity(animal);
+                        }
                     }
                 }
             }
