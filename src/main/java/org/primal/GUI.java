@@ -5,22 +5,22 @@ import org.primal.map.Chunk;
 import org.primal.map.Map;
 import org.primal.tile.Tile;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Point2D.Float;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.geom.Point2D.Float;
 
 class Surface extends JPanel implements MouseListener {
+
     private Map map;
     private int mapWidth = 960;
     private float convertionRate;
+
     public Surface(Map map) {
         super();
 
-        convertionRate = ((float)map.getSize())/((float)mapWidth);
+        convertionRate = ((float) map.getSize()) / ((float) mapWidth);
         this.addMouseListener(this);
         this.map = map;
     }
@@ -34,10 +34,11 @@ class Surface extends JPanel implements MouseListener {
                 for (int x = 0; x < chunk.getSize(); x++) {
                     for (int y = 0; y < chunk.getSize(); y++) {
                         Tile tile = chunk.getTile(x, y);
-                        g2d.setPaint(new Color(181, 202, 51));
-                        g2d.fill(tile.getShape());
-                        g2d.setPaint(new Color(0, 0, 0));
-                        g2d.draw(tile.getShape());
+                        g2d.setPaint(new Color(255, 202, 51));
+                        for (Shape shape : tile.getPixels()) {
+                            g2d.fill(shape);
+                            g2d.draw(shape);
+                        }
                         for (LivingEntity entity : tile.getLivingEntities()) {
                             g2d.setPaint(entity.getColor());
                             g2d.fill(entity.getShape());
@@ -50,22 +51,23 @@ class Surface extends JPanel implements MouseListener {
         repaint();
     }
 
-
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         doDrawing(g);
     }
-    private Float translate(int x, int y){
-        float fX = x*convertionRate;
-        float fY = y*convertionRate;
+
+    private Float translate(int x, int y) {
+        float fX = x * convertionRate;
+        float fY = y * convertionRate;
         return new Float(fX, fY);
     }
+
     public void mouseClicked(MouseEvent click) {
         int x = click.getX();
         int y = click.getY();
         Float coords = translate(x, y);
-        
+
         Tile t = map.getTile(((float) coords.getX()), ((float) coords.getY()));
         System.out.println(t);
     }
