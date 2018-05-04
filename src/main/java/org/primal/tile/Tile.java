@@ -29,7 +29,7 @@ public class Tile extends SimObject {
         return size;
     }
 
-    public boolean isChangeToWaterTile() {
+    public boolean shouldChangeToWaterTile() {
         return changeToWaterTile;
     }
 

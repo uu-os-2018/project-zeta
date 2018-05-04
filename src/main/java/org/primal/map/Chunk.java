@@ -43,7 +43,7 @@ public class Chunk extends SimObject {
     public void changeToWaterTiles() {
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                if (tiles[x][y].isChangeToWaterTile()) {
+                if (tiles[x][y].shouldChangeToWaterTile()) {
                     tiles[x][y] = new WaterTile(tiles[x][y].getX(), tiles[x][y].getY(), map);
                 }
             }
