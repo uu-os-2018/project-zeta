@@ -3,6 +3,7 @@ package org.primal;
 import org.primal.entity.LivingEntity;
 import org.primal.map.Chunk;
 import org.primal.map.Map;
+import org.primal.tile.Pixel;
 import org.primal.tile.Tile;
 
 import javax.swing.*;
@@ -34,10 +35,10 @@ class Surface extends JPanel implements MouseListener {
                 for (int x = 0; x < chunk.getSize(); x++) {
                     for (int y = 0; y < chunk.getSize(); y++) {
                         Tile tile = chunk.getTile(x, y);
-                        g2d.setPaint(new Color(255, 202, 51));
-                        for (Shape shape : tile.getPixels()) {
-                            g2d.fill(shape);
-                            g2d.draw(shape);
+                        for (Pixel pixel : tile.getPixels()) {
+                            g2d.setPaint(pixel.getColor());
+                            g2d.fill(pixel.getRectangle());
+                            g2d.draw(pixel.getRectangle());
                         }
                         for (LivingEntity entity : tile.getLivingEntities()) {
                             g2d.setPaint(entity.getColor());

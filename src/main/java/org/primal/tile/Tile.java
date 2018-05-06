@@ -8,12 +8,13 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Tile extends SimObject {
 
     private static int size = 30;
     private ConcurrentLinkedQueue<LivingEntity> livingEntities;
-    private List<Shape> pixels;
+    private List<Pixel> pixels;
 
     public Tile(float x, float y, Map map) {
         super(x, y, map);
@@ -21,13 +22,11 @@ public class Tile extends SimObject {
         this.shape = new Rectangle((int) x * size, (int) y * size, size, size);
         this.pixels = new ArrayList<>();
 
-        System.out.println("TILE -----------------------------");
-        // TODO: avoid static division below, define it somewhere else.
-        int amountOfPixels = size / 6;
-        for (int i = 1; i < amountOfPixels + 1; i++) {
-            for (int j = 1; j < amountOfPixels + 1; j++) {
-                pixels.add(new Rectangle(i, j, amountOfPixels, amountOfPixels));
-                System.out.println("i: " + i + ", j: " + j);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                // TODO: Abstract color so it is instead defined in the specific tile, LandTile, WaterTile, etc.
+                Color color = new Color(ThreadLocalRandom.current().nextInt(165, 205), 204, 8);
+                pixels.add(new Pixel(new Rectangle(((int) x * 30) + (i * 10), ((int) y * 30) + (j * 10), 10, 10), color));
             }
         }
     }
@@ -37,7 +36,7 @@ public class Tile extends SimObject {
         this.livingEntities = livingEntities;
     }
 
-    public List<Shape> getPixels() {
+    public List<Pixel> getPixels() {
         return this.pixels;
     }
 

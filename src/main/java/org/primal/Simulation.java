@@ -4,11 +4,7 @@ import org.primal.map.Chunk;
 import org.primal.map.Map;
 import org.primal.util.ThrowingTask;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.*;
 
 public class Simulation {
 
@@ -18,6 +14,7 @@ public class Simulation {
     private final CyclicBarrier updateLoopSyncronizationBarrier;
 
     class Worker implements Runnable {
+
         Chunk myChunk;
 
         Worker(Chunk chunk) {
@@ -57,7 +54,8 @@ public class Simulation {
 
         Runnable synchronizationAction = () -> {
             for (Chunk[] chunks : this.map.getChunks()) {
-                for (Chunk chunk : chunks) {}
+                for (Chunk chunk : chunks) {
+                }
             }
         };
 
