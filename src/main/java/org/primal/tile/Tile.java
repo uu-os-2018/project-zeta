@@ -36,12 +36,12 @@ public class Tile extends SimObject {
         this.livingEntities = livingEntities;
     }
 
-    public List<Pixel> getPixels() {
-        return this.pixels;
-    }
-
     public static int getSize() {
         return size;
+    }
+
+    public List<Pixel> getPixels() {
+        return this.pixels;
     }
 
     public void addLivingEntity(LivingEntity ent) {

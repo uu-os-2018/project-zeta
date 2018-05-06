@@ -8,40 +8,10 @@ import java.util.concurrent.*;
 
 public class Simulation {
 
+    private final CyclicBarrier updateLoopSyncronizationBarrier;
     private Map map;
     private ScheduledExecutorService simulationThreadPool;
     private boolean started, running;
-    private final CyclicBarrier updateLoopSyncronizationBarrier;
-
-    class Worker implements Runnable {
-
-        Chunk myChunk;
-
-        Worker(Chunk chunk) {
-            myChunk = chunk;
-        }
-
-        @Override
-        public void run() {
-            myChunk.updateChunk();
-            try {
-                updateLoopSyncronizationBarrier.await();
-
-                // This error thrown if the thread was interrupted during execution
-            } catch (InterruptedException ex) {
-                System.err.println("Thread " + Thread.currentThread() + "was interrupted");
-                return;
-
-                /**
-                 * This error thrown if ANOTHER thread was interrupted or the barrier was somehow broken
-                 * Either by the barrier being reset(), or the barrier being broken when await() was called,
-                 * or the barrier action failed due to an exception
-                 */
-            } catch (BrokenBarrierException ex) {
-                return;
-            }
-        }
-    }
 
     public Simulation(Map map) {
         this.map = map;
@@ -79,6 +49,36 @@ public class Simulation {
 
     private void updateLoop() {
 
+    }
+
+    class Worker implements Runnable {
+
+        Chunk myChunk;
+
+        Worker(Chunk chunk) {
+            myChunk = chunk;
+        }
+
+        @Override
+        public void run() {
+            myChunk.updateChunk();
+            try {
+                updateLoopSyncronizationBarrier.await();
+
+                // This error thrown if the thread was interrupted during execution
+            } catch (InterruptedException ex) {
+                System.err.println("Thread " + Thread.currentThread() + "was interrupted");
+                return;
+
+                /**
+                 * This error thrown if ANOTHER thread was interrupted or the barrier was somehow broken
+                 * Either by the barrier being reset(), or the barrier being broken when await() was called,
+                 * or the barrier action failed due to an exception
+                 */
+            } catch (BrokenBarrierException ex) {
+                return;
+            }
+        }
     }
 
 }
