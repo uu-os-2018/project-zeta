@@ -48,7 +48,6 @@ class Surface extends JPanel implements MouseListener {
                 }
             }
         }
-        g2d.drawString("Java 2D", 50, 50);
         repaint();
     }
 
@@ -97,7 +96,7 @@ public class GUI extends JFrame {
     private void initUI(Map map) {
         add(new Surface(map));
 
-        setTitle("Simple Java 2D example");
+        setTitle("Primal");
         setSize(1000, 1000);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
