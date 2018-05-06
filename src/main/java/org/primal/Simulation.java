@@ -4,11 +4,15 @@ import org.primal.map.Chunk;
 import org.primal.map.Map;
 import org.primal.util.ThrowingTask;
 
-import java.util.concurrent.*;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Simulation {
 
-    private final CyclicBarrier updateLoopSyncronizationBarrier;
+    private final CyclicBarrier updateLoopSynchronizationBarrier;
     private Map map;
     private ScheduledExecutorService simulationThreadPool;
     private boolean started, running;
@@ -29,7 +33,7 @@ public class Simulation {
             }
         };
 
-        updateLoopSyncronizationBarrier = new CyclicBarrier(chunkNumber, synchronizationAction);
+        updateLoopSynchronizationBarrier = new CyclicBarrier(chunkNumber, synchronizationAction);
 
     }
 
@@ -63,7 +67,7 @@ public class Simulation {
         public void run() {
             myChunk.updateChunk();
             try {
-                updateLoopSyncronizationBarrier.await();
+                updateLoopSynchronizationBarrier.await();
 
                 // This error thrown if the thread was interrupted during execution
             } catch (InterruptedException ex) {
