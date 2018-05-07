@@ -24,12 +24,10 @@ public class Behaviour {
 
         Point2D position = host.getPosition();
         Point2D.Float direction = host.getDirection();
-        System.out.println(Math.pow(direction.getX(),2) + Math.pow(direction.getY(),2));
 
         float speed = host.getSpeed();
         double angleChange = Math.toRadians(ThreadLocalRandom.current().nextInt(-30, 30));
         Point2D.Float newDir = direction;
-        //System.out.println(dirChange);
 
         float newDirX = (float)newDir.getX()*(float)Math.cos(angleChange) - (float)newDir.getY()*(float)Math.sin(angleChange);
         float newDirY = (float)newDir.getX()*(float)Math.sin(angleChange) + (float)newDir.getY()*(float)Math.cos(angleChange);

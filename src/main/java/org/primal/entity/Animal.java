@@ -35,8 +35,6 @@ public abstract class Animal extends LivingEntity {
         double startAngle = Math.toRadians(ThreadLocalRandom.current().nextDouble(0, 360));
         this.movementDirection = new Point2D.Float((float)Math.cos(startAngle), (float)Math.sin(startAngle));
 
-        //this.movementDirection = normalize(new Point2D.Float((float) ThreadLocalRandom.current().nextDouble(-1, 1), (float) ThreadLocalRandom.current().nextDouble(-1, 1)));
-        //this.shape.setOnMousePressed(click -> System.out.printf("Type: Animal %n Fullness: " + getFullness() + "%n Stamina: " + getStamina() + "%n"));
     }
 
     public Animal(float x, float y, Map map) {
@@ -47,24 +45,15 @@ public abstract class Animal extends LivingEntity {
         super.simulate();
 
         mapSize = map.getSize(); //temp solution
-        //Point2D currentPos = this.getPosition();
         Tile currentTile = map.getTile(getX(), getY());
-
-        System.out.println("dedug pre-behavour");
         Behaviour best = getBestBehaviour();
         best.act();
-        System.out.println("dedug post-behavour");
 
         updateStats();
-        System.out.println("dedug post-stats");        
 
-        //Point2D newPos = this.getPosition();
-        System.out.println("x: "+this.getX() + "y: "+this.getY());
         Tile newTile = map.getTile(getX(), getY());
         if (currentTile != newTile) {
-            System.out.println("dedug pre-moveTile");
             moveTile(currentTile, newTile);
-            System.out.println("dedug post-moveTile");
         }
 
     }
@@ -99,17 +88,13 @@ public abstract class Animal extends LivingEntity {
     int i = 0;
     public void move() {
         Point2D.Float newPos = new Point2D.Float((float)(this.position.getX() + movementDirection.getX()*speed), (float)(this.position.getY() + movementDirection.getY()*speed));
-        System.out.println(newPos.getX()+","+newPos.getY());
         Point2D collisionPoint = map.checkCollision((float)newPos.getX(), (float)newPos.getY());
-        if (collisionPoint.getX == 0 && collisionPoint.getY == 0) {
+        if (collisionPoint.getX() == 0 && collisionPoint.getY() == 0) {
             i = 0;
-            System.out.println("dedug pre-move2");
             this.position.setLocation(Math.max(newPos.getX(),0), Math.max(newPos.getY(), 0));
-            System.out.println("dedug pre-move3");
         } else {
             i++;
-            System.out.println("dedug pre-move " + i);
-            float dotProduct = movementDirection.getX()*collisionPoint*getX() +  movementDirection.getY()*collisionPoint*getY();
+            float dotProduct = (float)(movementDirection.getX()*collisionPoint.getX() +  movementDirection.getY()*collisionPoint.getY());
             movementDirection.setLocation(movementDirection.getX()-2*collisionPoint.getX()*dotProduct, movementDirection.getY()-2*collisionPoint.getY()*dotProduct);
 
             move();
@@ -117,7 +102,6 @@ public abstract class Animal extends LivingEntity {
 
 
         updateShape();
-        System.out.println("dedug postupdate");
     }
 
     private void moveTile(Tile oldTile, Tile newTile) {

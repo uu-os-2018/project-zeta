@@ -56,18 +56,21 @@ public class Map {
         int xInt = (int) x;
         int yInt = (int) y;
         Chunk ch = this.getChunk(xInt / chunkSize, yInt / chunkSize);
-        System.out.println("post-getChunk");
-        System.out.println(ch);
         return ch.getTile(xInt % chunkSize, yInt % chunkSize);
     }
 
     public Point2D checkCollision(float x, float y) {
-        if(x <= 0){return new Point2D.float(1,0);}
-        else if(y <= 0){return new Point2D.float(0,1);}
-        else if(x >= mapSize){return new Point2D.float(-1,0);}
-        else if(y >= 0){return new Point2D.float(0,-1);} 
-        else{return new Point2D.float(0,0);}
+        if(x <= 0){return new Point2D.Float(1,0);}
+        else if(y <= 0){return new Point2D.Float(0,1);}
+        else if(x >= mapSize){return new Point2D.Float(-1,0);}
+        else if(y >= mapSize){return new Point2D.Float(0,-1);}
+        else{return new Point2D.Float(0,0);}
     }
+
+    public boolean withinBounds(float x, float y) {
+        return (x >= 0 && y >= 0 && x < mapSize && y < mapSize);
+    }
+
 
     public ArrayList<Tile> getTiles(float x, float y, int radius) {
         ArrayList<Tile> tiles = new ArrayList<>();
@@ -75,6 +78,7 @@ public class Map {
 
         for (int i = -radius; i < (radius++); i++) {
             for (int j = -radius; j < (radius++); i++) {
+
                 if (withinBounds(x + i, y + j)) {
                     currentTile = this.getTile(x + i, y + j);
                     tiles.add(currentTile);
