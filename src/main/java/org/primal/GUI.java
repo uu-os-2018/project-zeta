@@ -3,19 +3,36 @@ package org.primal;
 import org.primal.entity.LivingEntity;
 import org.primal.map.Chunk;
 import org.primal.map.Map;
+import org.primal.tile.Pixel;
 import org.primal.tile.Tile;
-
-import java.util.concurrent.ConcurrentLinkedQueue;
+import org.primal.tile.WaterTile;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
-class Surface extends JPanel {
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
+import java.awt.geom.Point2D.Float;
+
+class Surface extends JPanel implements MouseListener, KeyListener {
+
+
     private Map map;
-
+    private int mapWidth;
+    private float convertionRate;
+    private boolean commandSent = false;
+    public enum Commands{ NOTHING, SPAWNLIONS, PRINTALL, HEJ, KILL, KILLALL, KILLSOME, HEAL, RESPAWN, MASSHEAL }
+    private Commands command;
     public Surface(Map map) {
         super();
 
+        mapWidth = map.width*480;
+        convertionRate = ((float) map.getSize()) / ((float) mapWidth);
+        this.addKeyListener(this);
+        this.addMouseListener(this);
+        System.out.println(this.isFocusable());
         this.map = map;
     }
 
@@ -28,10 +45,12 @@ class Surface extends JPanel {
                 for (int x = 0; x < chunk.getSize(); x++) {
                     for (int y = 0; y < chunk.getSize(); y++) {
                         Tile tile = chunk.getTile(x, y);
-                        g2d.setPaint(new Color(0, 100, 50));
-                        g2d.fill(tile.getShape());
-                        g2d.setPaint(new Color(0, 0, 0));
-                        g2d.draw(tile.getShape());
+                        tile.update();
+                        for (Pixel pixel : tile.getPixels()) {
+                            g2d.setPaint(pixel.getColor());
+                            g2d.fill(pixel.getRectangle());
+                            g2d.draw(pixel.getRectangle());
+                        }
                         for (LivingEntity entity : tile.getLivingEntities()) {
                             g2d.setPaint(entity.getColor());
                             g2d.fill(entity.getShape());
@@ -40,16 +59,157 @@ class Surface extends JPanel {
                 }
             }
         }
-        g2d.drawString("Java 2D", 50, 50);
         repaint();
     }
-
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         doDrawing(g);
     }
+
+    private Float translate(int x, int y) {
+        float fX = x * convertionRate;
+        float fY = y * convertionRate;
+        return new Float(fX, fY);
+    }
+
+    private void printAll(){
+        map.printAll();
+    }
+    private void healAnimals(Float pos){
+        System.out.println("Thoughts and prayers sent!");
+        Tile t = map.getTile(((float) pos.getX()), ((float) pos.getY()));
+        t.antiSlaughter();
+    }
+    private void massHeal(){
+        System.out.println("Useless func");
+        map.antiNuke();
+    }
+    private void killSomeAnimals(Float pos){
+        System.out.println("This is a christian minecraft server: No killing allowed");
+    }
+    private void killAnimals(Float pos){
+        Tile t = map.getTile(((float) pos.getX()), ((float) pos.getY()));
+        t.slaughter();
+    }
+    private void NUKEDECIMATESLAUGHTER(){
+        System.out.println("Freedom sent");
+        map.nuke();
+    }
+    private void spawn(){
+        System.out.println("Due to reasons this function is not implemented");
+    }
+    private void execCommands(){
+        switch(command){
+            case PRINTALL:
+                printAll();
+                break;
+            case HEJ:
+                System.out.println("Hej pa dig");
+                break;
+            case KILLALL:
+                NUKEDECIMATESLAUGHTER();
+                break;
+            case RESPAWN:
+                spawn();
+                break;
+            case MASSHEAL:
+                massHeal();
+                break;
+        }
+    }
+
+    private void execCommands(Float pos){
+        switch(command){
+            case SPAWNLIONS:
+                System.out.println("lions");
+                break;
+            case KILL:
+                killAnimals(pos);
+                break;
+            case KILLSOME:
+                killSomeAnimals(pos);
+                break;
+            case HEAL:
+                healAnimals(pos);
+                break;
+       
+        }
+    }
+    public void mouseClicked(MouseEvent click) {
+        this.requestFocusInWindow();
+        int x = click.getX();
+        int y = click.getY();
+        Float coords = translate(x, y);
+
+        if(commandSent == true){
+            execCommands(coords);
+            commandSent = false;
+        }
+        else{
+            Tile t = map.getTile(((float) coords.getX()), ((float) coords.getY()));
+            System.out.println(t);
+        }
+    }
+    public void keyPressed(KeyEvent e){
+        int key = e.getKeyCode();
+        
+        if(key == KeyEvent.VK_A){
+            command = Commands.SPAWNLIONS;
+            commandSent = true;
+        }
+        else if(key == KeyEvent.VK_P){
+            command = Commands.PRINTALL;
+        }
+        else if(key == KeyEvent.VK_H){
+            command = Commands.HEJ;
+        }
+        else if(key == KeyEvent.VK_N){
+            command = Commands.KILLALL;
+        }
+        else if(key == KeyEvent.VK_R){
+            command = Commands.RESPAWN;
+        }
+        else if(key == KeyEvent.VK_M){
+            command = Commands.MASSHEAL;
+        }
+        else if(key == KeyEvent.VK_S){
+            commandSent = true;
+            command = Commands.KILLSOME;
+        }
+        else if(key == KeyEvent.VK_K){
+            commandSent = true;
+            command = Commands.KILL;
+        }
+        else if(key == KeyEvent.VK_D){
+            commandSent = true;
+            command = Commands.HEAL;
+        }
+        else{
+            System.out.println("Invalid command");
+        }
+        execCommands();
+    }
+
+    // Useless methods (needed to be implemented)
+    public void mouseExited(MouseEvent e) {
+    }
+
+    public void mousePressed(MouseEvent e) {
+    }
+
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    public void mouseEntered(MouseEvent e) {
+    }
+    public void keyReleased(KeyEvent e){
+    }
+    public void keyTyped(KeyEvent e){
+    }
+    
+
 }
 
 public class GUI extends JFrame {
@@ -61,7 +221,7 @@ public class GUI extends JFrame {
     private void initUI(Map map) {
         add(new Surface(map));
 
-        setTitle("Simple Java 2D example");
+        setTitle("Primal");
         setSize(1000, 1000);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -5,29 +5,29 @@ import org.primal.map.Map;
 import org.primal.tile.Tile;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.ThreadLocalRandom;
+import java.awt.geom.Point2D;
 
 public abstract class Animal extends LivingEntity {
-    private int id;
+
     float starvationRate = 0.001f;
-    private int mapSize = 4 * 16;
     float stamina;
     float fullness;
+    LinkedList<Behaviour> behaviours;
+    private int id;
+    private int mapSize = 4 * 16;
     private Graphics g;
     private Character[] lastDirections = new Character[4];
     protected float speed = 0.1f;
     protected Point2D.Float movementDirection;
 
-    LinkedList<Behaviour> behaviours;
-
     public Animal(float x, float y, Map map, float health, float stamina, float fullness) {
         // TODO: remove static x y below.
         super(x, y, map, health);
 
-        this.shape = new Rectangle.Float(this.getX() * Tile.getSize(), this.getY() * Tile.getSize(), Tile.getSize() / 4, Tile.getSize() / 4);
+        this.shape = new Rectangle.Float(this.getX() * Tile.getSize(), this.getY() * Tile.getSize(), Tile.getSize() / 8, Tile.getSize() / 8);
 
         this.stamina = stamina;
         this.fullness = fullness;
@@ -48,6 +48,7 @@ public abstract class Animal extends LivingEntity {
         Tile currentTile = map.getTile(getX(), getY());
         Behaviour best = getBestBehaviour();
         best.act();
+
 
         updateStats();
 
@@ -85,15 +86,20 @@ public abstract class Animal extends LivingEntity {
             health -= starvationRate * 10;
         }
     }
-    int i = 0;
+
+
+    @Override
+    public boolean isAnimal() {
+        return true;
+    }
+
     public void move() {
         Point2D.Float newPos = new Point2D.Float((float)(this.position.getX() + movementDirection.getX()*speed), (float)(this.position.getY() + movementDirection.getY()*speed));
         Point2D collisionPoint = map.checkCollision((float)newPos.getX(), (float)newPos.getY());
         if (collisionPoint.getX() == 0 && collisionPoint.getY() == 0) {
-            i = 0;
             this.position.setLocation(Math.max(newPos.getX(),0), Math.max(newPos.getY(), 0));
         } else {
-            i++;
+
             float dotProduct = (float)(movementDirection.getX()*collisionPoint.getX() +  movementDirection.getY()*collisionPoint.getY());
             movementDirection.setLocation(movementDirection.getX()-2*collisionPoint.getX()*dotProduct, movementDirection.getY()-2*collisionPoint.getY()*dotProduct);
 

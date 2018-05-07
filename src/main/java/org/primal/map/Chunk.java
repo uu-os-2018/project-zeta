@@ -1,14 +1,13 @@
 package org.primal.map;
 
 import org.primal.SimObject;
-import org.primal.entity.*;
+import org.primal.entity.LivingEntity;
 import org.primal.tile.LandTile;
 import org.primal.tile.Tile;
-
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import org.primal.tile.WaterTile;
 
 public class Chunk extends SimObject {
+
     private Tile[][] tiles;
     private int size = 16;
     private int id;
@@ -19,26 +18,36 @@ public class Chunk extends SimObject {
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-
                 float xPos = i + getX() * this.size;
                 float yPos = j + getY() * this.size;
-                LivingEntity entity = null;
-
-                int n = ThreadLocalRandom.current().nextInt(0, 3);
-                if (n == 0) {
-                    entity = new Lion(xPos, yPos, map, 100.0f, 100.0f);
-                } else if (n == 1) {
-                    entity = new Hyena(xPos, yPos, map, 100.0f, 100.0f);
-                } else if (n == 2) {
-                    entity = new Giraffe(xPos, yPos, map, 100.0f, 100.0f);
-                }
                 Tile tile = new LandTile(xPos, yPos, map);
-                tile.addLivingEntity(entity);
                 tiles[i][j] = tile;
             }
         }
     }
-
+    public void decimate(){
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                getTile(i, j).slaughter();
+            }
+        }
+    }
+    public void antiDecimate(){
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                getTile(i, j).antiSlaughter();
+            }
+        }
+    }
+    public void printChunk(){
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                for (LivingEntity entity : getTile(i, j).getLivingEntities()) {
+                    System.out.println(entity);
+                }
+            }
+        }
+    }
     public void updateChunk() {
         /*
         try {
@@ -49,11 +58,25 @@ public class Chunk extends SimObject {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 for (LivingEntity entity : getTile(i, j).getLivingEntities()) {
+
                     entity.simulate();
                 }
             }
         }
-        //System.out.println("moved to"+ getTile(0,0).getLivingEntities().get(0).getPosition()[0]);
+    }
+
+    public void changeToWaterTiles() {
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                if (tiles[x][y].shouldChangeToWaterTile()) {
+                    tiles[x][y] = new WaterTile(tiles[x][y].getX(), tiles[x][y].getY(), map);
+                }
+            }
+        }
+    }
+
+    public Tile[][] getTiles() {
+        return tiles;
     }
 
     public int getId() {

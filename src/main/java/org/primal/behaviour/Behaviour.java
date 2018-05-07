@@ -7,6 +7,7 @@ import java.awt.geom.Point2D;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Behaviour {
+
     int weight = 0;
     Map map;
     Animal host;
@@ -26,7 +27,8 @@ public class Behaviour {
         Point2D.Float direction = host.getDirection();
 
         float speed = host.getSpeed();
-        double angleChange = Math.toRadians(ThreadLocalRandom.current().nextInt(-30, 30));
+        double angleChange = Math.toRadians(ThreadLocalRandom.current().nextDouble(-20, 20));
+
         Point2D.Float newDir = direction;
 
         float newDirX = (float)newDir.getX()*(float)Math.cos(angleChange) - (float)newDir.getY()*(float)Math.sin(angleChange);
