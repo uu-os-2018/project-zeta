@@ -34,6 +34,7 @@ public class Tile extends SimObject {
 
     public void removeLivingEntity(LivingEntity ent) {
         if (this.livingEntities.contains(ent)) {
+
             this.livingEntities.remove(ent);
         }
     }

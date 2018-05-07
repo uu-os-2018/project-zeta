@@ -18,7 +18,8 @@ public abstract class Animal extends LivingEntity {
     float fullness;
     private Graphics g;
     private Character[] lastDirections = new Character[4];
-    private float lengthUnit = 0.1f;
+    protected float speed = 0.1f;
+    protected Point2D.Float movementDirection;
 
     LinkedList<Behaviour> behaviours;
 
@@ -31,6 +32,10 @@ public abstract class Animal extends LivingEntity {
         this.stamina = stamina;
         this.fullness = fullness;
         energySatisfaction = 100;
+        double startAngle = Math.toRadians(ThreadLocalRandom.current().nextDouble(0, 360));
+        this.movementDirection = new Point2D.Float((float)Math.cos(startAngle), (float)Math.sin(startAngle));
+
+        //this.movementDirection = normalize(new Point2D.Float((float) ThreadLocalRandom.current().nextDouble(-1, 1), (float) ThreadLocalRandom.current().nextDouble(-1, 1)));
         //this.shape.setOnMousePressed(click -> System.out.printf("Type: Animal %n Fullness: " + getFullness() + "%n Stamina: " + getStamina() + "%n"));
     }
 
@@ -45,7 +50,9 @@ public abstract class Animal extends LivingEntity {
         //Point2D currentPos = this.getPosition();
         Tile currentTile = map.getTile(getX(), getY());
 
-        getBestBehaviour().act();
+        Behaviour best = getBestBehaviour();
+        best.act();
+
         updateStats();
 
         //Point2D newPos = this.getPosition();
@@ -53,6 +60,13 @@ public abstract class Animal extends LivingEntity {
         if (currentTile != newTile) {
             moveTile(currentTile, newTile);
         }
+    }
+
+    protected Point2D normalize(Point2D p){
+        double x = p.getX();
+        double y = p.getY();
+        float abs = (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        return new Point2D.Float((float) x/abs, (float) y / abs);
     }
 
     private Behaviour getBestBehaviour() {
@@ -77,106 +91,28 @@ public abstract class Animal extends LivingEntity {
     }
 
     public void move() {
-        if (lastDirections[0] != lastDirections[1]) {
-            stepInDir(lastDirections[0]);
+        Point2D.Float newPos = new Point2D.Float((float)(this.position.getX() + movementDirection.getX()*speed), (float)(this.position.getY() + movementDirection.getY()*speed));
+        if (map.withinBounds((float)newPos.getX(), (float)newPos.getY())) {
+            this.position.setLocation(newPos.getX(), newPos.getY());
         } else {
-            randomDir();
+            movementDirection.setLocation(movementDirection.getX()*-1, movementDirection.getY()*-1);
+
+            move();
         }
+
+
         updateShape();
     }
 
-    // N = North, S = South, W = West, E = East
-    // A = NorthEast, B = SouthEast, C = SouthWest, D = NorthWest
-    private void stepInDir(Character c) {
-        //float[] newPos = new float[2];
-        float newPosX = getX();
-        float newPosY = getY();
-
-        switch (c) {
-            case 'E':
-                newPosX += lengthUnit;
-                updateLastDir('E');
-                break;
-            case 'W':
-                newPosX -= lengthUnit;
-                updateLastDir('W');
-                break;
-            case 'N':
-                newPosY += lengthUnit;
-                updateLastDir('N');
-                break;
-            case 'S':
-                newPosY -= lengthUnit;
-                updateLastDir('S');
-                break;
-            case 'A':
-                newPosX += lengthUnit / 2;
-                newPosY += lengthUnit / 2;
-                updateLastDir('A');
-                break;
-            case 'B':
-                newPosX += lengthUnit / 2;
-                newPosY -= lengthUnit / 2;
-                updateLastDir('B');
-                break;
-            case 'C':
-                newPosX -= lengthUnit / 2;
-                newPosY -= lengthUnit / 2;
-                updateLastDir('C');
-                break;
-            default:
-                newPosX -= lengthUnit / 2;
-                newPosY += lengthUnit / 2;
-                updateLastDir('D');
-                break;
-        }
-        if (map.withinBounds(newPosX, newPosY)) {
-            this.position.setLocation(newPosX, newPosY);
-        } else {
-            randomDir();
-        }
-    }
-
-    private void randomDir() {
-        int n = ThreadLocalRandom.current().nextInt(0, 8);
-        switch (n) {
-            case 0:
-                stepInDir('E');
-                break;
-            case 1:
-                stepInDir('W');
-                break;
-            case 2:
-                stepInDir('N');
-                break;
-            case 3:
-                stepInDir('S');
-                break;
-            case 4:
-                stepInDir('A');
-                break;
-            case 5:
-                stepInDir('B');
-                break;
-            case 6:
-                stepInDir('C');
-                break;
-            default:
-                stepInDir('D');
-                break;
-        }
-    }
-
-    private void updateLastDir(Character c) {
+    private void moveTile(Tile oldTile, Tile newTile) {
+        
+        oldTile.removeLivingEntity(this);
+        newTile.addLivingEntity(this);
+    }    private void updateLastDir(Character c) {
         for (int i = 0; i < lastDirections.length - 1; i++) {
             lastDirections[i + 1] = lastDirections[i];
         }
         lastDirections[0] = c;
-    }
-
-    private void moveTile(Tile oldTile, Tile newTile) {
-        oldTile.removeLivingEntity(this);
-        newTile.addLivingEntity(this);
     }
 
     public int getId() {
@@ -209,6 +145,11 @@ public abstract class Animal extends LivingEntity {
 
     public abstract void eat(LivingEntity food);
 
+    public void setPosition(Point2D.Float p){
+        this.position = p;
+    }
+    public void setDirection(Point2D.Float p){this.movementDirection = p; }
+
     public float getFullness() {
         return this.fullness;
     }
@@ -216,4 +157,7 @@ public abstract class Animal extends LivingEntity {
     public float getStamina() {
         return this.stamina;
     }
+
+    public float getSpeed(){return this.speed; }
+    public Point2D.Float getDirection(){return this.movementDirection; }
 }
