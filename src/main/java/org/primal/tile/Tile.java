@@ -5,19 +5,25 @@ import org.primal.entity.LivingEntity;
 import org.primal.map.Map;
 
 import java.awt.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Tile extends SimObject {
-    protected static int size = 30;
+
+    private static int size = 30;
     private ConcurrentLinkedQueue<LivingEntity> livingEntities;
+
     private boolean changeToWaterTile = false;
+
+    List<Pixel> pixels;
 
     public Tile(float x, float y, Map map) {
         super(x, y, map);
-        this.livingEntities = new ConcurrentLinkedQueue<LivingEntity>();
+        this.livingEntities = new ConcurrentLinkedQueue<>();
         this.shape = new Rectangle((int) x * size, (int) y * size, size, size);
+        this.pixels = new ArrayList<>();
     }
 
     public Tile(float x, float y, Map map, ConcurrentLinkedQueue<LivingEntity> livingEntities) {
@@ -35,6 +41,10 @@ public class Tile extends SimObject {
 
     public void changeToWaterTile() {
         changeToWaterTile = true;
+    }
+
+    public List<Pixel> getPixels() {
+        return this.pixels;
     }
 
     public void addLivingEntity(LivingEntity ent) {
