@@ -4,6 +4,7 @@ import org.primal.entity.LivingEntity;
 import org.primal.tile.Tile;
 import org.primal.entity.Animal;
 import org.primal.map.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import org.primal.entity.Herbivore;
 public class ChaseBehaviour extends Behaviour {
     protected Point2D.Float chaseDir;
     private boolean isChasing = false;
-    private LivingEntity chasedAnimal;
+    private volatile LivingEntity chasedAnimal;
 
     public ChaseBehaviour(Animal host, Map map) {
 
