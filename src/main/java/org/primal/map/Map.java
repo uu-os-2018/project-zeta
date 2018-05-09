@@ -84,7 +84,7 @@ public class Map {
      * Returns chunk at position (x,y).
      *
      * @param x X value for chunk to get.
-     * @param y X value for chunk to get.
+     * @param y Y value for chunk to get.
      * @return Chunk at position (x,y) if x and y is valid, else null.
      */
     public Chunk getChunk(float x, float y) {
@@ -119,7 +119,7 @@ public class Map {
      * else directional points to move in opposite direction are returned.
      *
      * @param x X value to check.
-     * @param y X value to check.
+     * @param y Y value to check.
      * @return X and y points in direction to move.
      * (0,0) if within bounds, else points in opposite direction of initial x and y.
      */
