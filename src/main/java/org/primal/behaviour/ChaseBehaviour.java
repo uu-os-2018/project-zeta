@@ -15,10 +15,23 @@ public class ChaseBehaviour extends Behaviour {
     private boolean isChasing = false;
     private volatile LivingEntity chasedAnimal;
 
+    /**
+     * Creates a chasing behaviour. The behaviour can be used to make an animal chase and eat other animals.
+     * @param host = the Animal associated with this behaviour
+     * @param map = the current Map
+     */
+
     public ChaseBehaviour(Animal host, Map map) {
 
         super(host, map);
     }
+
+    /**
+     * Method that checks whether an animal should start chasing another. It checks surrounding tiles for herbivores and if
+     * found then it is selected and the weight of this behaviour is set.
+     * Otherwise it sets the weight of this behaviour only according to the fullness of the host.
+     * The hungrier the animal is the higher the weight of this behaviour.
+     */
 
     public void decide() {
         if (!isChasing) {
@@ -46,12 +59,22 @@ public class ChaseBehaviour extends Behaviour {
         }
     }
 
+    /**
+     * Normalizes a vector
+     * @param p = the vector to be normalized
+     * @return a normalized vector
+     */
+
     protected Point2D normalize(Point2D p){
         double x = p.getX();
         double y = p.getY();
         float abs = (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
         return new Point2D.Float((float) x/abs, (float) y / abs);
     }
+
+    /**
+     * If the animal is close enough to its prey then it will eat it. Otherwise it will move towards it.
+     */
 
     public void act() {
         if (chasedAnimal == null) {
