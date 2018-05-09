@@ -12,8 +12,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * A simulation running on multiple concurrent threads utilizing a scheduledExecutor.
- * The simulation also uses a CyclicBarrier for syncronization between worker threads.
- * The simulation currently strives to run at 60 cylces per second.
+ * The simulation also uses a CyclicBarrier for synchronization between worker threads.
+ * The simulation currently strives to run at 60 cycles per second.
  * One 'cycle' is defined as the time it takes all the Chunks in a given map to complete their {@code updateChunks()} method.
  * Currently tightly coupled with the Primal project.
  *
