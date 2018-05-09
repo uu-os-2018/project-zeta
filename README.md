@@ -39,6 +39,9 @@ src
 │               ├── map
 │               ├── tile
 │               ├── util
+|               ├── GUI.java
+│               ├── SimObject.java
+│               ├── Simulation.java
 │               └── Main.java
 │
 └── test
