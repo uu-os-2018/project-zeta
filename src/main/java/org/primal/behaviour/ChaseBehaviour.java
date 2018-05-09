@@ -35,7 +35,7 @@ public class ChaseBehaviour extends Behaviour {
 
     public void decide() {
         if (!isChasing) {
-            ArrayList<Tile> tiles = map.getTiles(host.getX(), host.getY(), 1);
+            ArrayList<Tile> tiles = map.getTiles(host.getX(), host.getY(), 3);
             for (Tile tile : tiles) {
                 for (LivingEntity entity : tile.getLivingEntities()) {
                     if (entity instanceof Herbivore) {
@@ -65,7 +65,7 @@ public class ChaseBehaviour extends Behaviour {
      * @return a normalized vector
      */
 
-    protected Point2D normalize(Point2D p){
+    protected Point2D normalize(Point2D p) {
         double x = p.getX();
         double y = p.getY();
         float abs = (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));

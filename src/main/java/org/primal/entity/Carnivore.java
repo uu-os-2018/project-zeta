@@ -32,7 +32,7 @@ public abstract class Carnivore extends Animal {
     public void eat(LivingEntity food) {
                 Tile tile = map.getTile(food.getX(), food.getY());
                 tile.removeLivingEntity(food);
-                this.stamina = 100;
+                this.fullness = 100;
     }
 
     /**
