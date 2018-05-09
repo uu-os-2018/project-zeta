@@ -28,7 +28,7 @@ public abstract class Herbivore extends Animal {
     public void eat(LivingEntity food) {
         if (food.isPlant()) {
             map.getTile(food.getX(), food.getY()).removeLivingEntity(food);
-            this.fulness = 100;
+            this.fullness = 100;
         }
     }
 
