@@ -58,13 +58,4 @@ public class TileTest {
         tile.removeLivingEntity(zebra);
         assertEquals(tile.getLivingEntities().size(), 0);
     }
-
-    @Test
-    public void killAnimal() {
-        tile.addLivingEntity(zebra);
-        assertEquals(tile.getLivingEntities().size(), 1);
-
-        zebra.kill();
-        assertEquals(tile.getLivingEntities().size(), 0);
-    }
 }
